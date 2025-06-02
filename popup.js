@@ -9,32 +9,49 @@ document.addEventListener('DOMContentLoaded', async () => {
   const totalTimeEl = document.getElementById('totalTime');
   const motivationalMessageEl = document.getElementById('motivationalMessage');
   const pauseBtnEl = document.getElementById('pauseBtn');
+  const testNotificationBtnEl = document.getElementById('testNotificationBtn');
   const resetBtnEl = document.getElementById('resetBtn');
 
   // 데이터 로드 및 UI 업데이트
   await loadAndDisplayData();
   
-  // 1초마다 UI 업데이트
-  setInterval(loadAndDisplayData, 1000);
+  // 1초마다 시간 관련 UI만 업데이트 (메시지는 제외)
+  setInterval(async () => {
+    await updateTimeRelatedData();
+  }, 1000);
+  
+  // 격려 메시지는 30초마다만 업데이트
+  setInterval(() => {
+    updateMotivationalMessage();
+  }, 30000); // 30초
 
   // 버튼 이벤트 리스너
   pauseBtnEl.addEventListener('click', handlePause);
+  testNotificationBtnEl.addEventListener('click', handleTestNotification);
   resetBtnEl.addEventListener('click', handleReset);
 
+  // 초기 상태 로드
+  await updatePauseButtonState();
+
   async function loadAndDisplayData() {
+    await updateTimeRelatedData();
+    updateMotivationalMessage(); // 처음 로드 시에만 메시지 설정
+  }
+
+  async function updateTimeRelatedData() {
     try {
       // 현재 활성 탭 정보 가져오기
       const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
-      updateCurrentActivity(activeTab);
+      await updateCurrentActivity(activeTab);
 
       // 일일 사용 통계 가져오기
       const result = await chrome.storage.local.get(['dailyUsage']);
       const dailyUsage = result.dailyUsage || {};
       
       updateDailyStats(dailyUsage);
-      updateMotivationalMessage();
+      // 격려 메시지는 여기서 업데이트하지 않음
     } catch (error) {
-      console.error('데이터 로드 오류:', error);
+      console.error('시간 데이터 로드 오류:', error);
     }
   }
 
@@ -134,7 +151,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       "꾸준함이 실력이 됩니다! 화이팅! 💪",
       "지금 이 순간이 성장하는 시간이에요! 🚀",
       "하나씩 차근차근, 잘하고 계세요! 👏",
-      "당신의 노력이 빛나고 있어요! ⭐"
+      "당신의 노력이 빛나고 있어요! ⭐",
+      "집중하는 모습이 정말 멋져요! 🔥",
+      "오늘의 성취를 만들어가는 중이네요! 🎯",
+      "프로다운 집중력이에요! 👨‍💻"
     ];
     
     const randomMessage = messages[Math.floor(Math.random() * messages.length)];
@@ -171,8 +191,55 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   async function handlePause() {
-    // TODO: 일시정지 기능 구현
-    alert('일시정지 기능은 다음 버전에서 구현 예정입니다! 🚧');
+    try {
+      const response = await chrome.runtime.sendMessage({ type: 'TOGGLE_PAUSE' });
+      await updatePauseButtonState();
+      
+      if (response.isPaused) {
+        showTemporaryMessage('휴식 시간입니다! 차나 커피 드세요 🍵');
+      } else {
+        showTemporaryMessage('다시 시작! 오늘도 화이팅! 🚀');
+      }
+    } catch (error) {
+      console.error('일시정지 토글 오류:', error);
+      alert('일시정지 기능에 오류가 발생했습니다.');
+    }
+  }
+
+  async function handleTestNotification() {
+    try {
+      await chrome.runtime.sendMessage({ type: 'TEST_NOTIFICATION' });
+      showTemporaryMessage('테스트 알림을 보냈습니다! 🔔');
+    } catch (error) {
+      console.error('테스트 알림 오류:', error);
+      alert('알림 전송에 실패했습니다.');
+    }
+  }
+
+  async function updatePauseButtonState() {
+    try {
+      const response = await chrome.runtime.sendMessage({ type: 'GET_STATUS' });
+      if (response.isPaused) {
+        pauseBtnEl.textContent = '재시작';
+        pauseBtnEl.className = 'btn btn-primary';
+      } else {
+        pauseBtnEl.textContent = '일시정지';
+        pauseBtnEl.className = 'btn btn-secondary';
+      }
+    } catch (error) {
+      console.error('상태 로드 오류:', error);
+    }
+  }
+
+  function showTemporaryMessage(message) {
+    const originalMessage = motivationalMessageEl.textContent;
+    motivationalMessageEl.textContent = message;
+    motivationalMessageEl.style.fontWeight = 'bold';
+    
+    setTimeout(() => {
+      motivationalMessageEl.textContent = originalMessage;
+      motivationalMessageEl.style.fontWeight = 'normal';
+    }, 3000); // 3초 후 원래 메시지로 복귀
   }
 
   async function handleReset() {

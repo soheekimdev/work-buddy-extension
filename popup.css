@@ -190,6 +190,15 @@ h2 {
   background: #2d3748;
 }
 
+.btn-primary {
+  background: #3182ce;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #2c5aa0;
+}
+
 .btn-outline {
   background: transparent;
   color: #718096;
