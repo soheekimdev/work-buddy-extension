@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Work Buddy</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>Work Buddy</h1>
+      <p class="subtitle">당신의 AI 스터디 메이트 💪</p>
+    </header>
+    
+    <main class="main">
+      <section class="current-session">
+        <h2>현재 세션</h2>
+        <div class="session-info">
+          <div class="current-activity">
+            <span class="label">작업 중:</span>
+            <span id="currentActivity">대기 중...</span>
+          </div>
+          <div class="session-time">
+            <span class="label">집중 시간:</span>
+            <span id="sessionTime">0분</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="daily-stats">
+        <h2>오늘의 활동</h2>
+        <div id="dailyStatsList" class="stats-list">
+          <!-- 동적으로 생성됨 -->
+        </div>
+        <div class="total-time">
+          <strong>총 작업 시간: <span id="totalTime">0분</span></strong>
+        </div>
+      </section>
+
+      <section class="motivational">
+        <div class="message-box">
+          <p id="motivationalMessage">오늘도 화이팅! 🚀</p>
+        </div>
+      </section>
+
+      <section class="controls">
+        <button id="pauseBtn" class="btn btn-secondary">일시정지</button>
+        <button id="resetBtn" class="btn btn-outline">오늘 기록 초기화</button>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>함께 성장해요! ✨</p>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

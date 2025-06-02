@@ -1,0 +1,229 @@
+/* Work Buddy Popup Styles */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  width: 350px;
+  min-height: 500px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #333;
+}
+
+.container {
+  padding: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.main {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  flex: 1;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+section {
+  margin-bottom: 20px;
+}
+
+section:last-child {
+  margin-bottom: 0;
+}
+
+h2 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #4a5568;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 5px;
+}
+
+.session-info {
+  background: #f7fafc;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.current-activity,
+.session-time {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.current-activity:last-child,
+.session-time:last-child {
+  margin-bottom: 0;
+}
+
+.label {
+  font-weight: 500;
+  color: #718096;
+}
+
+#currentActivity {
+  font-weight: 600;
+  color: #2d3748;
+}
+
+#sessionTime {
+  font-weight: 600;
+  color: #3182ce;
+}
+
+.stats-list {
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  background: #f7fafc;
+  border-radius: 6px;
+  border-left: 4px solid;
+}
+
+.stat-item.dev {
+  border-left-color: #38b2ac;
+}
+
+.stat-item.learning {
+  border-left-color: #ed8936;
+}
+
+.stat-item.design {
+  border-left-color: #e53e3e;
+}
+
+.stat-item.work {
+  border-left-color: #3182ce;
+}
+
+.stat-item.other {
+  border-left-color: #718096;
+}
+
+.stat-name {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.stat-time {
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 14px;
+}
+
+.total-time {
+  text-align: center;
+  padding: 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.message-box {
+  background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+#motivationalMessage {
+  font-weight: 500;
+  color: #2d3748;
+  line-height: 1.4;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+}
+
+.btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.btn-secondary {
+  background: #4a5568;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #2d3748;
+}
+
+.btn-outline {
+  background: transparent;
+  color: #718096;
+  border: 2px solid #e2e8f0;
+}
+
+.btn-outline:hover {
+  background: #f7fafc;
+  border-color: #cbd5e0;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 15px;
+  color: white;
+  opacity: 0.8;
+  font-size: 12px;
+}
+
+/* 스크롤바 스타일링 */
+.stats-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.stats-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 2px;
+}
+
+.stats-list::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 2px;
+}
+
+.stats-list::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
+}
