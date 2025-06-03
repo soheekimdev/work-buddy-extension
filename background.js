@@ -48,7 +48,7 @@ class WorkBuddy {
         this.togglePause();
         sendResponse({ isPaused: this.isPaused });
       } else if (request.type === 'TEST_NOTIFICATION') {
-        this.sendMotivationalMessage();
+        this.sendTestNotification(); // 테스트용 별도 함수
         sendResponse({ success: true });
       } else if (request.type === 'GET_STATUS') {
         sendResponse({ isPaused: this.isPaused });
@@ -149,13 +149,35 @@ class WorkBuddy {
     chrome.storage.local.set({ dailyUsage: this.dailyUsage });
   }
 
+  // 테스트용 알림 (시간 제한 없이)
+  async sendTestNotification() {
+    const message = this.currentSite ? 
+      this.generateContextualMessage() : 
+      this.getRandomMessage();
+    
+    try {
+      const notificationId = `workbuddy-test-${Date.now()}`;
+      
+      await chrome.notifications.create(notificationId, {
+        type: 'basic',
+        iconUrl: 'icons/icon48.png',
+        title: 'Work Buddy 💪 (테스트)',
+        message: message,
+      });
+      
+    } catch (error) {
+      console.error('테스트 알림 발송 실패:', error);
+    }
+  }
+
+  // 정기 알림 (시간 제한 있음)
   async sendMotivationalMessage() {
-    if (this.isPaused) return; // 일시정지 상태면 알림 안 보냄
-
+    if (this.isPaused) return;
+    
     const now = Date.now();
-
-    // 50분 이내에 이미 알림을 보냈다면 스킵 (30분에서 50분으로 변경)
-    if (now - this.lastNotificationTime < 50 * 60 * 1000) {
+    
+    // 25분 이내에 이미 알림을 보냈다면 스킵
+    if (now - this.lastNotificationTime < 25 * 60 * 1000) {
       return;
     }
 
@@ -164,7 +186,9 @@ class WorkBuddy {
     const message = this.generateContextualMessage();
 
     try {
-      await chrome.notifications.create({
+      const notificationId = `workbuddy-${Date.now()}`;
+      
+      await chrome.notifications.create(notificationId, {
         type: 'basic',
         iconUrl: 'icons/icon48.png',
         title: 'Work Buddy 💪',
@@ -172,9 +196,9 @@ class WorkBuddy {
       });
 
       this.lastNotificationTime = now;
-      console.log('격려 메시지 발송:', message);
+      
     } catch (error) {
-      console.log('알림 발송 실패:', error);
+      console.error('정기 알림 발송 실패:', error);
     }
   }
 
