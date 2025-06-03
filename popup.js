@@ -250,14 +250,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         const result = await chrome.storage.local.get(['dailyUsage']);
         const dailyUsage = result.dailyUsage || {};
         
+        // 오늘 데이터 삭제
         delete dailyUsage[today];
         
-        await chrome.storage.local.set({ dailyUsage });
+        // 현재 세션도 리셋
+        await chrome.storage.local.set({ 
+          dailyUsage,
+          currentSession: null // 현재 세션 초기화
+        });
+        
+        // 백그라운드 스크립트에 세션 리셋 알림
+        try {
+          await chrome.runtime.sendMessage({ type: 'RESET_SESSION' });
+        } catch (error) {
+          console.log('백그라운드 스크립트 통신 오류 (무시 가능):', error);
+        }
         
         // UI 즉시 업데이트
         await loadAndDisplayData();
         
-        alert('기록이 초기화되었습니다! ✨');
+        alert('모든 기록이 초기화되었습니다! ✨');
       } catch (error) {
         console.error('초기화 오류:', error);
         alert('초기화 중 오류가 발생했습니다.');

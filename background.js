@@ -52,6 +52,9 @@ class WorkBuddy {
         sendResponse({ success: true });
       } else if (request.type === 'GET_STATUS') {
         sendResponse({ isPaused: this.isPaused });
+      } else if (request.type === 'RESET_SESSION') {
+        this.resetSession();
+        sendResponse({ success: true });
       }
     });
 
@@ -241,6 +244,17 @@ class WorkBuddy {
   async getDailyUsage() {
     const result = await chrome.storage.local.get(['dailyUsage']);
     return result.dailyUsage || {};
+  }
+
+  // 세션 리셋 (초기화 버튼에서 호출)
+  resetSession() {
+    this.currentSite = null;
+    this.sessionStartTime = null;
+    this.isPaused = false;
+    
+    console.log('Work Buddy 세션이 리셋되었습니다! 🔄');
+    
+    return true;
   }
 
   // 일시정지/재시작 토글
